@@ -11,7 +11,8 @@ import ViewQuestion from './pages/Admin/ViewQuestions';
 import PrivateRoutes from './component/PrivateRoute';
 function App() {
   return (
-    <Routes>
+    <>
+      <Routes>
       <Route path='/' element={<Login />} />
       <Route path='/signup' element={<Signup />} />
       <Route element={<PrivateRoutes />}>
@@ -23,6 +24,9 @@ function App() {
 
 
     </Routes>
+    
+    </>
+  
   );
 }
 
