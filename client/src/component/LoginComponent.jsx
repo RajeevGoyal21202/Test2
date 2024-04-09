@@ -35,11 +35,15 @@ const LoginComponent = () => {
     console.log("ddddd",email,password)
     try{
       const res = await dispatch(loginUser(data))
+      console.log(res)
       if(res.payload.data.success === true){
         notify();
-        setTimeout(() => {
-          navigate("/adminDashboard");
-        }, 3500);
+        if(res.payload.data.user.role === "admin"){
+          navigate("/adminDashboard")
+        }
+        else{
+          navigate("/dashboard")
+        }
       }
       return res;
     }

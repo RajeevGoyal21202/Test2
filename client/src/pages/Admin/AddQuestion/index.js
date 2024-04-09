@@ -1,18 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Stack, Typography, Card, CardContent, TextField, Button } from '@mui/material'
 import TopBar from '../../../component/navbarLayout'
 import Box from '@mui/material/Box';
 import { useForm } from "react-hook-form";
 import Grid from '@mui/material/Grid';
-
+import axios from 'axios'
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+
+import { useDispatch,useSelector } from "react-redux";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { createExam } from '../../../features/exam/examAction';
 const AddQuestion = () => {
+  const {state} = useLocation()
+  const [data,setData]= useState("")
+  console.log(state)
   const notify = () => toast("Sign Up succesful!");
   const navigate = useNavigate();
+  
+  const token = useSelector((state)=>state?.auth?.userToken)
 
   const dispatch = useDispatch()
   const {
@@ -25,27 +32,19 @@ const AddQuestion = () => {
 
 
   const onSubmit = async (data) => {
+
+    const {title,description,answer,option1,option2,option3,option4,weightage} = data
+
     console.log(data)
 
     try {
-      const res = await dispatch(createExam(data))
-      if(res.payload.data.success === true){
-        notify();
-        setTimeout(() => {
-          navigate("/adminDashboard");
-        }, 3500);
-      }
-
-      console.log("reassss",res.payload)
-      return res
-
-    }
-    catch (error) {
-
-      alert(error)
+      const {data: response} = await axios.post(`http://localhost:8000/question/addQuestion/${state.id}`,{title,description,answer,option1,option2,option3,option4,weightage},{ 'headers': { 'Authorization': token  } });
+      setData(response);
+      console.log(data)
+    } catch (error) {
+      console.error(error.message);
     }
 
-    reset();
   };
   return (
     <div>
@@ -62,17 +61,17 @@ const AddQuestion = () => {
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <label>Tittle</label>
-                      <TextField size='small' type='text' {...register("name", {
+                      <TextField size='small' type='text' {...register("title", {
                         required: "tittle is requried",
                       })} sx={{ width: "100%", mt: 1,mb:1 }} />
-                      {errors.name && (
-                        <p style={{ color: "red" }}>{`${errors.name.message}`}</p>
+                      {errors.title && (
+                        <p style={{ color: "red" }}>{`${errors.title.message}`}</p>
                       )}
 
                       <Grid item xs={12}>
                         <label>Question Category</label>
                         <TextField size='small' {...register("question", {
-                          required: "question is requried",
+                          required: "question is requried", 
                         })} sx={{ width: "100%", mt: 1,mb:1 }} />
                         {errors.question && (
                           <p style={{ color: "red" }}>{`${errors.question.message}`}</p>
@@ -91,12 +90,12 @@ const AddQuestion = () => {
 
                       <Grid item xs={12}>
                         <label>Status</label>
-                        <TextField  {...register("question", {
-                          required: "question is requried",
+                        <TextField  {...register("status", {
+                          required: "status is requried",
                         })}
                           size='small' sx={{ width: "100%", mt: 1,mb:1 }} />
-                            {errors.question && (
-                          <p style={{ color: "red" }}>{`${errors.question.message}`}</p>
+                            {errors.status && (
+                          <p style={{ color: "red" }}>{`${errors.status.message}`}</p>
                         )}
                       </Grid>
                     </Grid>
@@ -106,69 +105,69 @@ const AddQuestion = () => {
                   <Grid item xs={12}>
                     <label>Descriptions</label>
                     <TextField multiline={true}
-                      rows={6} {...register("instructions", {
-                        required: "instructions is requried",
+                      rows={6} {...register("description", {
+                        required: "description is requried",
                       })} sx={{ width: "100%", mt: 1,mb:1 }} />
-                      {errors.instructions && (
-                          <p style={{ color: "red" }}>{`${errors.instructions.message}`}</p>
+                      {errors.description && (
+                          <p style={{ color: "red" }}>{`${errors.description.message}`}</p>
                         )}
 
                   </Grid>
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
                       <label>Options 1</label>
-                      <TextField size='small' type='number' {...register("duration", {
-                        required: "duration is requried",
+                      <TextField size='small' type='number' {...register("option1", {
+                        required: "option1 is requried",
                       })} sx={{ width: "100%", mt: 1,mb:1 }} />
-                      {errors.duration && (
-                          <p style={{ color: "red" }}>{`${errors.duration.message}`}</p>
+                      {errors.option1 && (
+                          <p style={{ color: "red" }}>{`${errors.option1.message}`}</p>
                         )}
                       <Grid item xs={12}>
                         <label>Option 2 </label>
-                        <TextField size='small' type='number' {...register("retry", {
-                          required: "Retry is requried",
+                        <TextField size='small' type='number' {...register("option2", {
+                          required: "option2 is requried",
                         })} sx={{ width: "100%", mt: 1,mb:1 }} />
-                         {errors.retry && (
-                          <p style={{ color: "red" }}>{`${errors.retry.message}`}</p>
+                         {errors.option2 && (
+                          <p style={{ color: "red" }}>{`${errors.option2.message}`}</p>
                         )}
                        
                       </Grid>
                     </Grid>
                     <Grid item xs={6}>
                       <label>option3</label>
-                      <TextField size='small' type='number'  {...register("passingMarks", {
-                        required: "passingMarks is requried",
+                      <TextField size='small' type='number'  {...register("option3", {
+                        required: "option3 is requried",
                       })} sx={{ width: "100%", mt: 1,mb:1 }} />
-                       {errors.passingMarks && (
-                          <p style={{ color: "red" }}>{`${errors.passingMarks.message}`}</p>
+                       {errors.option3 && (
+                          <p style={{ color: "red" }}>{`${errors.option3.message}`}</p>
                         )}
                      
                       <Grid item xs={12}>
                         <label>option 4</label>
-                        <TextField size='small' type='number' {...register("totalMarks", {
-                          required: "totalMarks is requried",
+                        <TextField size='small' type='number' {...register("option4", {
+                          required: "option4 is requried",
                         })} sx={{ width: "100%", mt: 1 }} />
-                       {errors.totalMarks && (
-                          <p style={{ color: "red" }}>{`${errors.totalMarks.message}`}</p>
+                       {errors.option4 && (
+                          <p style={{ color: "red" }}>{`${errors.option4.message}`}</p>
                         )}
                       </Grid>
                     </Grid>
                     <Grid item xs={6}>
                         <label>Answer</label>
-                        <TextField size='small' type='number' {...register("totalMarks", {
-                          required: "totalMarks is requried",
+                        <TextField size='small' type='number' {...register("answer", {
+                          required: "answer is requried",
                         })} sx={{ width: "100%", mt: 1 }} />
-                       {errors.totalMarks && (
-                          <p style={{ color: "red" }}>{`${errors.totalMarks.message}`}</p>
+                       {errors.answer && (
+                          <p style={{ color: "red" }}>{`${errors.answer.message}`}</p>
                         )}
                       </Grid>
                       <Grid item xs={6}>
                         <label>Weightage</label>
-                        <TextField size='small' type='number' {...register("totalMarks", {
-                          required: "totalMarks is requried",
+                        <TextField size='small' type='number' {...register("weightage", {
+                          required: "weightage is requried",
                         })} sx={{ width: "100%", mt: 1 }} />
-                       {errors.totalMarks && (
-                          <p style={{ color: "red" }}>{`${errors.totalMarks.message}`}</p>
+                       {errors.weightage && (
+                          <p style={{ color: "red" }}>{`${errors.weightage.message}`}</p>
                         )}
                       </Grid>
 

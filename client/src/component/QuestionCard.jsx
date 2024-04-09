@@ -17,7 +17,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 
-const QuestionCard = () => {
+const QuestionCard = ({item}) => {
   return (
     <div>
       <Stack sx={{ m: 5 }}>
@@ -28,16 +28,16 @@ const QuestionCard = () => {
               <Typography></Typography>
             </Stack>
             <FormControl>
-              <FormLabel id="demo-radio-buttons-group-label">Number off primitive data types in Java are?  </FormLabel>
+              <FormLabel id="demo-radio-buttons-group-label">{item.description}</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
                 defaultValue="female"
                 name="radio-buttons-group"
               >
-                <FormControlLabel value="female" control={<Radio />} label="Female" />
-                <FormControlLabel value="male" control={<Radio />} label="Male" />
-                <FormControlLabel value="other" control={<Radio />} label="Other" />
-                <FormControlLabel value="other2" control={<Radio />} label="2" />
+                <FormControlLabel value="female" control={<Radio />} label={item.options.option1} />
+                <FormControlLabel value="male" control={<Radio />} label={item.options.option2} />
+                <FormControlLabel value="other" control={<Radio />} label={item.options.option3} />
+                <FormControlLabel value="other2" control={<Radio />} label={item.options.option4} />
               </RadioGroup>
             </FormControl>
           </CardContent>

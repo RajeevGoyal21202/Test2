@@ -4,6 +4,7 @@ import JWT from "jsonwebtoken";
 
 export const requireSignIn = async (req, res, next) =>  {
   try {
+    console.log("request reached to middleware")
       const token = req.header('Authorization');
       console.log( req.headers.Authorization)
       if (!token) {

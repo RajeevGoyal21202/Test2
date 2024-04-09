@@ -80,6 +80,7 @@ const addExam = async(req) => {
           exam.category = req.body.category;
           exam.totalMarks = req.body.totalMarks;
           exam.passingMarks = req.body.passingMarks;
+          exam.instructions
           exam.save()
          return exam
         }
@@ -102,11 +103,14 @@ const addExam = async(req) => {
     }
   }
   
-  const deleteExam = async(req,res) => {
+  const deleteExam = async(req) => {
     try{
-       const user = await User.findOne({_id: req.body.userid})
-       if(user.isAdmin){
-        const exam = await Exam.findOne({_id: req.params.id})
+      console.log("params",req.params.id)
+       const user = await userModel.findOne({_id: req.user._id})
+       if(user.role === "admin"){
+        console.log("uesr is admin")
+        const exam = await examModel.findOneAndDelete({_id: req.params.id})
+        console.log(exam)
         if(exam){
           exam.delete()
          return exam
